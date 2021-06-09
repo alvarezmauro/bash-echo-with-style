@@ -1,3 +1,5 @@
+#!/bin/bash
+# @author Mauro Alvarez
 # NOTE: In order to make this command dependency-free I copied a couple of function from
 # https://github.com/labbots/bash-utility/ (thanks Labbots team!)
 # I know... I could include that repo as a Git submodule, but most devs (including myself)
