@@ -96,6 +96,25 @@ variable::is_int() {
     return 1
 }
 
+# Text color
+COLOR_DEFAULT='39'
+COLOR_WHITE='97'
+COLOR_BACK='30'
+COLOR_RED='31'
+COLOR_GREEN='32'
+COLOR_YELLOW='33'
+COLOR_BLUE='34'
+COLOR_MAGENTA='35'
+COLOR_CYAN='36'
+COLOR_GRAY='90'
+COLOR_LIGHT_RED='91'
+COLOR_LIGHT_GREEN='92'
+COLOR_LIGHT_YELLOW='93'
+COLOR_LIGHT_BLUE='94'
+COLOR_LIGHT_MAGENTA='95'
+COLOR_LIGHT_CYAN='96'
+COLOR_LIGHT_GRAY='37'
+
 # Text Style
 STYLE_NORMAL='0'
 STYLE_BOLD='1'
@@ -110,6 +129,7 @@ STYLE_PASSWORD='8'
 
 # text style values
 styleValue=''
+textColorValue=''
 
 setStyleValue() {
   [[ $# = 0 ]] && printf "%s: Missing arguments\n" "${FUNCNAME[0]}" && exit 1
@@ -136,6 +156,37 @@ setStyleValue() {
   fi
 }
 
+setTextColorValue() {
+  [[ $# = 0 ]] && printf "%s: Missing arguments\n" "${FUNCNAME[0]}" && exit 1
+  if validation::alpha_num "${1}";
+  then
+    if variable::is_int "${1}";
+    then
+      if [[ "${1}" -ge 0 && "${1}" -le 255 ]];
+      then
+        textColorValue=${1}
+      else
+        echo "Color value is not valid (it needs to be an integer between 0 and 255)"
+        exit 1
+      fi
+    else
+      local __color_variable_name="COLOR_$(string::to_upper ${1})"
+      local __text_color="$[__color_variable_name]"
+    
+      if [[ "${__text_color}" == 0 ]];
+      then
+        echo "Color option is not valid (e.g. of valid options: default, black, white, red, light_red)"
+        exit 1
+      else
+        textColorValue=$__text_color
+      fi
+    fi
+  else
+    echo "Color option is not valid (e.g. of valid options: default, black, white, red, light_red)"
+    exit 1
+  fi
+}
+
 styleText() {
   local text=${@: -1}
   while (( $# > 1 ))
@@ -144,12 +195,16 @@ styleText() {
       -s|--style)
         setStyleValue ${2}
         ;;
+      -c|--color)
+        setTextColorValue ${2}
+        ;;
     esac
     shift
   done
 
   echo "${text}"
   echo $styleValue
+  echo $textColorValue
 
 }
 
