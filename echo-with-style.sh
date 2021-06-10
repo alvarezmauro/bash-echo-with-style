@@ -146,6 +146,8 @@ STYLE_HIDDEN='8'
 STYLE_PASSWORD='8'
 
 
+RESET_STYLE='\e[0m'
+
 # text style values
 styleValue=${STYLE_NORMAL}
 textColorValue=${COLOR_DEFAULT}
@@ -180,23 +182,48 @@ setTextColorValue() {
   [[ $# = 0 ]] && printf "%s: Missing arguments\n" "${FUNCNAME[0]}" && exit 1
   if variable::is_int "${1}";
   then
-    if [[ "${1}" -ge 0 && "${1}" -le 255 ]];
+    if [[ "${1}" -ge 0 && "${1}" -le 256 ]];
     then
       textColorValue=${1}
     else
-      echo "Color value is not valid (it needs to be an integer between 0 and 255)"
+      echo "Color value is not valid (it needs to be an integer between 0 and 256)"
       exit 1
     fi
   else
-    local __color_variable_name="COLOR_$(string::to_upper ${1} | sed -e 's/[\-]/\_/g')"
-    local __text_color="$[__color_variable_name]"
+    local __text_color_variable_name="COLOR_$(string::to_upper ${1} | sed -e 's/[\-]/\_/g')"
+    local __text_color="$[__text_color_variable_name]"
   
     if [[ "${__text_color}" == 0 ]];
     then
-      echo "Color option is not valid (e.g. of valid options: default, black, white, red, light_red)"
+      echo "Color option is not valid (e.g. of valid options: default, black, white, red, light-red)"
       exit 1
     else
-      textColorValue=$__text_color
+      textColorValue=${__text_color}
+    fi
+  fi
+}
+
+setBackgroundColorValue() {
+  [[ $# = 0 ]] && printf "%s: Missing arguments\n" "${FUNCNAME[0]}" && exit 1
+  if variable::is_int "${1}";
+  then
+    if [[ "${1}" -ge 0 && "${1}" -le 256 ]];
+    then
+      backgroundColorValue=${1}
+    else
+      echo "Background color value is not valid (it needs to be an integer between 0 and 256)"
+      exit 1
+    fi
+  else
+    local __background_color_variable_name="BG_COLOR_$(string::to_upper ${1} | sed -e 's/[\-]/\_/g')"
+    local __background_color="$[__background_color_variable_name]"
+  
+    if [[ "${__background_color}" == 0 ]];
+    then
+      echo "Background color option is not valid (e.g. of valid options: default, black, white, red, light-red)"
+      exit 1
+    else
+      backgroundColorValue=${__background_color}
     fi
   fi
 }
@@ -212,6 +239,9 @@ styleText() {
       -c|--color)
         setTextColorValue ${2}
         ;;
+      -b|--background-color)
+        setBackgroundColorValue ${2}
+        ;;
     esac
     shift
   done
@@ -219,6 +249,7 @@ styleText() {
   echo "${text}"
   echo $styleValue
   echo $textColorValue
+  echo $backgroundColorValue
 
 }
 
