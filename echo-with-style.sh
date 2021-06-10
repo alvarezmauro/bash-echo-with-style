@@ -128,8 +128,8 @@ STYLE_PASSWORD='8'
 
 
 # text style values
-styleValue=''
-textColorValue=''
+styleValue=${STYLE_NORMAL}
+textColorValue=${COLOR_DEFAULT}
 
 setStyleValue() {
   [[ $# = 0 ]] && printf "%s: Missing arguments\n" "${FUNCNAME[0]}" && exit 1
