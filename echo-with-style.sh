@@ -158,32 +158,26 @@ setStyleValue() {
 
 setTextColorValue() {
   [[ $# = 0 ]] && printf "%s: Missing arguments\n" "${FUNCNAME[0]}" && exit 1
-  if validation::alpha_num "${1}";
+  if variable::is_int "${1}";
   then
-    if variable::is_int "${1}";
+    if [[ "${1}" -ge 0 && "${1}" -le 255 ]];
     then
-      if [[ "${1}" -ge 0 && "${1}" -le 255 ]];
-      then
-        textColorValue=${1}
-      else
-        echo "Color value is not valid (it needs to be an integer between 0 and 255)"
-        exit 1
-      fi
+      textColorValue=${1}
     else
-      local __color_variable_name="COLOR_$(string::to_upper ${1})"
-      local __text_color="$[__color_variable_name]"
-    
-      if [[ "${__text_color}" == 0 ]];
-      then
-        echo "Color option is not valid (e.g. of valid options: default, black, white, red, light_red)"
-        exit 1
-      else
-        textColorValue=$__text_color
-      fi
+      echo "Color value is not valid (it needs to be an integer between 0 and 255)"
+      exit 1
     fi
   else
-    echo "Color option is not valid (e.g. of valid options: default, black, white, red, light_red)"
-    exit 1
+    local __color_variable_name="COLOR_$(string::to_upper ${1} | sed -e 's/[\-]/\_/g')"
+    local __text_color="$[__color_variable_name]"
+  
+    if [[ "${__text_color}" == 0 ]];
+    then
+      echo "Color option is not valid (e.g. of valid options: default, black, white, red, light_red)"
+      exit 1
+    else
+      textColorValue=$__text_color
+    fi
   fi
 }
 
