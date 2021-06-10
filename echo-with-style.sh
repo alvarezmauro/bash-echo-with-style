@@ -95,3 +95,16 @@ variable::is_int() {
     fi
     return 1
 }
+
+# Text Style
+STYLE_NORMAL='0'
+STYLE_BOLD='1'
+STYLE_DIM='2'
+STYLE_ITALICS='3'
+STYLE_UNDERLINE='4'
+STYLE_BLINK='5'
+STYLE_REVERSE='7'
+STYLE_HIDDEN='8'
+STYLE_PASSWORD='8'
+
+
