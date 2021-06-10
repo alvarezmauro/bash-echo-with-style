@@ -142,13 +142,13 @@ setStyleValue() {
     then
       if [[ ${__style_variable_name} == "STYLE_NORMAL" ]];
         then
-          styleValue=$__text_style
+          styleValue=${__text_style}
         else
           echo "The style option is not valid (options: normal, bold, dim, italics, underline, etc)"
           exit 1
         fi
       else
-        styleValue=$__text_style
+        styleValue=${__text_style}
     fi
   else
     echo "The style option is not valid (options: normal, bold, dim, italics, underline)"
