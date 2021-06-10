@@ -166,14 +166,14 @@ setStyleValue() {
         then
           styleValue=${__text_style}
         else
-          echo "The style option is not valid (options: normal, bold, dim, italics, underline, etc)"
+          printf "The style option is not valid (options: normal, bold, dim, italics, underline, etc)\n"
           exit 1
         fi
       else
         styleValue=${__text_style}
     fi
   else
-    echo "The style option is not valid (options: normal, bold, dim, italics, underline)"
+    printf "The style option is not valid (options: normal, bold, dim, italics, underline, etc)\n"
     exit 1
   fi
 }
@@ -186,7 +186,7 @@ setTextColorValue() {
     then
       textColorValue=${1}
     else
-      echo "Color value is not valid (it needs to be an integer between 0 and 256)"
+      printf "Color value is not valid (it needs to be an integer between 0 and 256)\n"
       exit 1
     fi
   else
@@ -195,7 +195,7 @@ setTextColorValue() {
   
     if [[ "${__text_color}" == 0 ]];
     then
-      echo "Color option is not valid (e.g. of valid options: default, black, white, red, light-red)"
+      printf "Color option is not valid (e.g. of valid options: default, black, white, red, light-red)\n"
       exit 1
     else
       textColorValue=${__text_color}
@@ -211,7 +211,7 @@ setBackgroundColorValue() {
     then
       backgroundColorValue=${1}
     else
-      echo "Background color value is not valid (it needs to be an integer between 0 and 256)"
+      printf "Background color value is not valid (it needs to be an integer between 0 and 256)\n"
       exit 1
     fi
   else
@@ -220,7 +220,7 @@ setBackgroundColorValue() {
   
     if [[ "${__background_color}" == 0 ]];
     then
-      echo "Background color option is not valid (e.g. of valid options: default, black, white, red, light-red)"
+      printf "Background color option is not valid (e.g. of valid options: default, black, white, red, light-red)\n"
       exit 1
     else
       backgroundColorValue=${__background_color}
@@ -246,10 +246,10 @@ styleText() {
     shift
   done
 
-  echo "${text}"
-  echo $styleValue
-  echo $textColorValue
-  echo $backgroundColorValue
+  printf "${text}\n"
+  printf "${styleValue}\n"
+  printf "${textColorValue}\n"
+  printf "${backgroundColorValue}\n"
 
 }
 
