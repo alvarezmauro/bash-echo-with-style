@@ -108,3 +108,50 @@ STYLE_HIDDEN='8'
 STYLE_PASSWORD='8'
 
 
+# text style values
+styleValue=''
+
+setStyleValue() {
+  [[ $# = 0 ]] && printf "%s: Missing arguments\n" "${FUNCNAME[0]}" && exit 1
+  if validation::alpha_num "${1}";
+  then
+    local __style_variable_name="STYLE_$(string::to_upper ${1})"
+    local __text_style="$[__style_variable_name]"
+  
+    if [[ "${__text_style}" == 0 ]];
+    then
+      if [[ ${__style_variable_name} == "STYLE_NORMAL" ]];
+        then
+          styleValue=$__text_style
+        else
+          echo "The style option is not valid (options: normal, bold, dim, italics, underline, etc)"
+          exit 1
+        fi
+      else
+        styleValue=$__text_style
+    fi
+  else
+    echo "The style option is not valid (options: normal, bold, dim, italics, underline)"
+    exit 1
+  fi
+}
+
+styleText() {
+  local text=${@: -1}
+  while (( $# > 1 ))
+  do
+    case $1 in
+      -s|--style)
+        setStyleValue ${2}
+        ;;
+    esac
+    shift
+  done
+
+  echo "${text}"
+  echo $styleValue
+
+}
+
+
+styleText "${@}"
