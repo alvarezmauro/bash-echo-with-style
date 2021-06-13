@@ -7,30 +7,6 @@
 # for this simple command, including the whole library would be the same than killing
 # a fly with a bazooka
 
-# set -e
-
-# @description Make a string lowercase. (source: bash-utility)
-#
-# @example
-#   echo "$(string::to_lower "HellO")"
-#   #Output
-#   hello
-#
-# @arg $1 string The input string.
-#
-# @exitcode 0  If successful.
-# @exitcode 2 Function missing arguments.
-#
-# @stdout Returns the lowercased string.
-string::to_lower() {
-    [[ $# = 0 ]] && printf "%s: Missing arguments\n" "${FUNCNAME[0]}" && return 2
-    if [[ ${BASH_VERSINFO:-0} -ge 4 ]]; then
-        printf '%s\n' "${1,,}"
-    else
-        printf "%s\n" "${@}" | tr '[:upper:]' '[:lower:]'
-    fi
-}
-
 # @description Make a string all uppercase. (source: bash-utility)
 #
 # @example
@@ -229,29 +205,30 @@ setBackgroundColorValue() {
 }
 
 styleText() {
-  local text=${@: -1}
-  while (( $# > 1 ))
-  do
-    case $1 in
+  local args=("$@")
+  local printfValue=()
+  for ((i=0; i<"${#}"; ++i)); do
+    case ${args[i]} in
       -s|--style)
-        setStyleValue ${2}
+        setStyleValue ${args[i+1]}
+        unset args[i];unset args[i+1];
         ;;
       -c|--color)
-        setTextColorValue ${2}
+        setTextColorValue ${args[i+1]}
+        unset args[i];unset args[i+1];
         ;;
       -b|--background-color)
-        setBackgroundColorValue ${2}
+        setBackgroundColorValue ${args[i+1]}
+        unset args[i];unset args[i+1];
+        ;;
+      *)
+        printfValue+=(${args[i]}) 
         ;;
     esac
-    shift
   done
 
-  printf "${text}\n"
-  printf "${styleValue}\n"
-  printf "${textColorValue}\n"
-  printf "${backgroundColorValue}\n"
-
+  text="$(sed "s/\\\n/\\${RESET_STYLE}\\\n/g" <<< "${printfValue[0]}")"
+  printf "\e[${backgroundColorValue};${styleValue};${textColorValue}m${text}" "${printfValue[@]:1}"
 }
-
 
 styleText "${@}"
