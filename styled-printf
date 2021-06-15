@@ -197,27 +197,33 @@ setBackgroundColorValue() {
 styleText() {
   local args=("$@")
   local printfValue=()
-  for ((i = 0; i < "${#}"; ++i)); do
+  i=0
+  while [ $i -lt "${#}" ]; do
     case ${args[i]} in
     -s | --style)
       setStyleValue ${args[i + 1]}
       unset args[i]
       unset args[i+1]
+      i=$((i+2))
       ;;
     -c | --color)
       setTextColorValue ${args[i + 1]}
       unset args[i]
       unset args[i+1]
+      i=$((i+2))
       ;;
     -b | --background-color)
       setBackgroundColorValue ${args[i + 1]}
       unset args[i]
       unset args[i+1]
+      i=$((i+2))
       ;;
     *)
-      printfValue+=(${args[i]})
+      printfValue+=("${args[i]}")
+      i=$(($i + 1))
       ;;
     esac
+    
   done
 
   format="$(sed "s/\\\n/\\${RESET_STYLE}\\\n/g" <<<"${printfValue[0]}")"
