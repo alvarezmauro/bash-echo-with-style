@@ -220,8 +220,8 @@ styleText() {
     esac
   done
 
-  text="$(sed "s/\\\n/\\${RESET_STYLE}\\\n/g" <<<"${printfValue[0]}")"
-  printf "\e[${backgroundColorValue};${styleValue};${textColorValue}m${text}" "${printfValue[@]:1}"
+  format="$(sed "s/\\\n/\\${RESET_STYLE}\\\n/g" <<<"${printfValue[0]}")"
+  printf "\e[${backgroundColorValue};${styleValue};${textColorValue}m${format}" "${printfValue[@]:1}"
 }
 
 styleText "${@}"
