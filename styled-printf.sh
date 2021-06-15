@@ -21,12 +21,12 @@
 #
 # @stdout Returns the uppercased string.
 string::to_upper() {
-    [[ $# = 0 ]] && printf "%s: Missing arguments\n" "${FUNCNAME[0]}" && return 2
-    if [[ ${BASH_VERSINFO:-0} -ge 4 ]]; then
-        printf '%s\n' "${1^^}"
-    else
-        printf "%s\n" "${@}" | tr '[:lower:]' '[:upper:]'
-    fi
+  [[ $# = 0 ]] && printf "%s: Missing arguments\n" "${FUNCNAME[0]}" && return 2
+  if [[ ${BASH_VERSINFO:-0} -ge 4 ]]; then
+    printf '%s\n' "${1^^}"
+  else
+    printf "%s\n" "${@}" | tr '[:lower:]' '[:upper:]'
+  fi
 }
 
 # @description Check if given variable contains only alpha-numeric characters. (source: bash-utility)
@@ -44,13 +44,13 @@ string::to_upper() {
 # @exitcode 1 If input is not an alpha-numeric.
 # @exitcode 2 Function missing arguments.
 validation::alpha_num() {
-    [[ $# = 0 ]] && printf "%s: Missing arguments\n" "${FUNCNAME[0]}" && return 2
+  [[ $# = 0 ]] && printf "%s: Missing arguments\n" "${FUNCNAME[0]}" && return 2
 
-    declare re='^[[:alnum:]]+$'
-    if [[ "${1}" =~ $re ]]; then
-        return 0
-    fi
-    return 1
+  declare re='^[[:alnum:]]+$'
+  if [[ "${1}" =~ $re ]]; then
+    return 0
+  fi
+  return 1
 }
 
 # @description Check if given variable is an integer. (source: bash-utility)
@@ -65,11 +65,11 @@ validation::alpha_num() {
 # @exitcode 0  If input is an integer.
 # @exitcode 1 If input is not an integer.
 variable::is_int() {
-    declare re='^[+]?[0-9]+$'
-    if [[ ${1} =~ $re ]]; then
-        return 0
-    fi
-    return 1
+  declare re='^[+]?[0-9]+$'
+  if [[ ${1} =~ $re ]]; then
+    return 0
+  fi
+  return 1
 }
 
 # Text color
@@ -121,7 +121,6 @@ STYLE_REVERSE='7'
 STYLE_HIDDEN='8'
 STYLE_PASSWORD='8'
 
-
 RESET_STYLE='\e[0m'
 
 # text style values
@@ -131,22 +130,19 @@ backgroundColorValue=${BG_COLOR_DEFAULT}
 
 setStyleValue() {
   [[ $# = 0 ]] && printf "%s: Missing arguments\n" "${FUNCNAME[0]}" && exit 1
-  if validation::alpha_num "${1}";
-  then
+  if validation::alpha_num "${1}"; then
     local __style_variable_name="STYLE_$(string::to_upper ${1})"
-    local __text_style="$[__style_variable_name]"
-  
-    if [[ "${__text_style}" == 0 ]];
-    then
-      if [[ ${__style_variable_name} == "STYLE_NORMAL" ]];
-        then
-          styleValue=${__text_style}
-        else
-          printf "The style option is not valid (options: normal, bold, dim, italics, underline, etc)\n"
-          exit 1
-        fi
-      else
+    local __text_style="$((__style_variable_name))"
+
+    if [[ "${__text_style}" == 0 ]]; then
+      if [[ ${__style_variable_name} == "STYLE_NORMAL" ]]; then
         styleValue=${__text_style}
+      else
+        printf "The style option is not valid (options: normal, bold, dim, italics, underline, etc)\n"
+        exit 1
+      fi
+    else
+      styleValue=${__text_style}
     fi
   else
     printf "The style option is not valid (options: normal, bold, dim, italics, underline, etc)\n"
@@ -156,10 +152,8 @@ setStyleValue() {
 
 setTextColorValue() {
   [[ $# = 0 ]] && printf "%s: Missing arguments\n" "${FUNCNAME[0]}" && exit 1
-  if variable::is_int "${1}";
-  then
-    if [[ "${1}" -ge 0 && "${1}" -le 256 ]];
-    then
+  if variable::is_int "${1}"; then
+    if [[ "${1}" -ge 0 && "${1}" -le 256 ]]; then
       textColorValue=${1}
     else
       printf "Color value is not valid (it needs to be an integer between 0 and 256)\n"
@@ -167,10 +161,9 @@ setTextColorValue() {
     fi
   else
     local __text_color_variable_name="COLOR_$(string::to_upper ${1} | sed -e 's/[\-]/\_/g')"
-    local __text_color="$[__text_color_variable_name]"
-  
-    if [[ "${__text_color}" == 0 ]];
-    then
+    local __text_color="$((__text_color_variable_name))"
+
+    if [[ "${__text_color}" == 0 ]]; then
       printf "Color option is not valid (e.g. of valid options: default, black, white, red, light-red)\n"
       exit 1
     else
@@ -181,10 +174,8 @@ setTextColorValue() {
 
 setBackgroundColorValue() {
   [[ $# = 0 ]] && printf "%s: Missing arguments\n" "${FUNCNAME[0]}" && exit 1
-  if variable::is_int "${1}";
-  then
-    if [[ "${1}" -ge 0 && "${1}" -le 256 ]];
-    then
+  if variable::is_int "${1}"; then
+    if [[ "${1}" -ge 0 && "${1}" -le 256 ]]; then
       backgroundColorValue=${1}
     else
       printf "Background color value is not valid (it needs to be an integer between 0 and 256)\n"
@@ -192,10 +183,9 @@ setBackgroundColorValue() {
     fi
   else
     local __background_color_variable_name="BG_COLOR_$(string::to_upper ${1} | sed -e 's/[\-]/\_/g')"
-    local __background_color="$[__background_color_variable_name]"
-  
-    if [[ "${__background_color}" == 0 ]];
-    then
+    local __background_color="$((__background_color_variable_name))"
+
+    if [[ "${__background_color}" == 0 ]]; then
       printf "Background color option is not valid (e.g. of valid options: default, black, white, red, light-red)\n"
       exit 1
     else
@@ -207,27 +197,30 @@ setBackgroundColorValue() {
 styleText() {
   local args=("$@")
   local printfValue=()
-  for ((i=0; i<"${#}"; ++i)); do
+  for ((i = 0; i < "${#}"; ++i)); do
     case ${args[i]} in
-      -s|--style)
-        setStyleValue ${args[i+1]}
-        unset args[i];unset args[i+1];
-        ;;
-      -c|--color)
-        setTextColorValue ${args[i+1]}
-        unset args[i];unset args[i+1];
-        ;;
-      -b|--background-color)
-        setBackgroundColorValue ${args[i+1]}
-        unset args[i];unset args[i+1];
-        ;;
-      *)
-        printfValue+=(${args[i]}) 
-        ;;
+    -s | --style)
+      setStyleValue ${args[i + 1]}
+      unset args[i]
+      unset args[i+1]
+      ;;
+    -c | --color)
+      setTextColorValue ${args[i + 1]}
+      unset args[i]
+      unset args[i+1]
+      ;;
+    -b | --background-color)
+      setBackgroundColorValue ${args[i + 1]}
+      unset args[i]
+      unset args[i+1]
+      ;;
+    *)
+      printfValue+=(${args[i]})
+      ;;
     esac
   done
 
-  text="$(sed "s/\\\n/\\${RESET_STYLE}\\\n/g" <<< "${printfValue[0]}")"
+  text="$(sed "s/\\\n/\\${RESET_STYLE}\\\n/g" <<<"${printfValue[0]}")"
   printf "\e[${backgroundColorValue};${styleValue};${textColorValue}m${text}" "${printfValue[@]:1}"
 }
 
