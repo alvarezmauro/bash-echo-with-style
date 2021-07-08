@@ -1,0 +1,26 @@
+{
+  "name": "styled-printf",
+  "version": "1.0.0",
+  "description": "Style printf output",
+  "main": "styled-printf",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alvarezmauro/styled-printf.git"
+  },
+  "bin": {
+    "styled-printf": "./styled-printf"
+  },
+  "files": [ 
+    "./styled-printf"
+  ],
+  "keywords": [
+    "bash",
+    "printf"
+  ],
+  "author": "Mauro Alvarez",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/alvarezmauro/styled-printf/issues"
+  },
+  "homepage": "https://github.com/alvarezmauro/styled-printf#readme"
+}
