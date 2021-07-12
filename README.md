@@ -23,7 +23,10 @@ The `styled-printf` command is like `printf` (in fact it's a function wrapping `
 
 ### Usage:
 ```Shell
-styled-printf [-s <text format>] [--style <text format>] [-c <color>] [--color <color>] [-b <color>] [-background-color <color>] format [argument]
+styled-printf [-s <text format>] [--style <text format>]
+  [-c <color>] [--color <color>]
+  [-b <color>] [-background-color <color>]
+  format [argument]
 ```
 
 ### Options:
