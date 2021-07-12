@@ -1,6 +1,6 @@
 {
   "name": "styled-printf",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Style printf output",
   "main": "styled-printf",
   "repository": {
@@ -10,7 +10,7 @@
   "bin": {
     "styled-printf": "./styled-printf"
   },
-  "files": [ 
+  "files": [
     "./styled-printf"
   ],
   "keywords": [
