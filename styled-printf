@@ -221,13 +221,11 @@ printHelp() {
   printf "%s\n\n" "The styled-printf command is like printf (in fact it's a function wrapping printf) that allows you
 to easily set the text styling, color and background color for the output"
 
-  printf "%s\n" "Flags:"
-  printf "%-30s %s\n" "  -h | --help" "Help documentation"
-  printf "%-30s %s\n\n" "  -t | --test" "Test all the different styles in your bash terminal"
-
   printf "%s\n" "Usage:"
-  printf "%s\n\n" "styled-printf [-s <text format>] [--s <text format>] [-c <color>] [--color <color>]
-[-b <color>] [-background-color <color>] format [argument]"
+  printf "%s\n\n" "styled-printf [-s <text format>] [--style <text format>] 
+  [-c <color>] [--color <color>]
+  [-b <color>] [-background-color <color>] 
+  format [argument]"
 
   printf "%s\n" "Options:"
   printf "%-30s %s\n" "  -s | --style" "normal | bold | dim | italics | underline | blink"
@@ -244,15 +242,21 @@ to easily set the text styling, color and background color for the output"
   printf "%-30s %s\n\n" "" "or a number between 0 and 256"
 
   printf "%s\n" "Example:"
-  printf "%s\n" 'styled-printf -s bold -c red -b blue "%s\n" "This text is bold, red and has a blue background"'
+  printf "%s\n\n" 'styled-printf -s bold -c red -b blue "%s\n" "This text is bold, red and has a blue background"'
+
+  printf "%s\n" "Other flags:"
+  printf "%-30s %s\n" "  -h | --help" "Help documentation"
+  printf "%-30s %s\n\n" "  -t | --test" "Test all the different styles in your bash terminal"
+
 
   exit 0
 }
 
 printWrongArgument() {
   printf "%s\n" "unknown option: ${1}"
-  printf "%s\n\n" "usage: styled-printf [-s <text format>] [--s <text format>]
-           [-c <color>] [--color <color>] [-b <color>] [-background-color <color>]
+  printf "%s\n\n" "usage: styled-printf [-s <text format>] [--style <text format>]
+           [-c <color>] [--color <color>] 
+           [-b <color>] [-background-color <color>]
            format [argument]"
   printf "%s\n" "For help: styled-printf [--h] [--help]"
   exit 0
