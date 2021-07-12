@@ -17,3 +17,5 @@ The `styled-printf` command is like `printf` (in fact it's a function wrapping `
 ```Shell
 styled-printf -s bold -c blue -b yellow "%s\n" "This text is bold, red and has a blue background"
 ```
+
+<img src="https://github.com/alvarezmauro/styled-printf/blob/main/assets/example-output-01.png" width=450 alt="styled-printf output: text 'This text is bold, red and has a blue background' in blue color, bold and yellow background">
