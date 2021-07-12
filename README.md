@@ -1,7 +1,21 @@
 # styled-printf
 [![Hex.pm](https://img.shields.io/hexpm/l/plug.svg?maxAge=2592000&style=flat-square)](https://github.com/bvanhoekelen/terminal-style/blob/master/LICENSE)
+[![npm](https://img.shields.io/npm/v/npm-auto-version.svg?maxAge=2592000)](https://www.npmjs.com/package/https://www.npmjs.com/package/styled-printf)
+
 
 Do you want to add some styles 🎨 to the output of your bash **printf** commands? Use this custom script and make the output of that **printf** look fanzy :bowtie: 
+
+## How install
+
+Using Yarn
+```Shell
+yarn add styled-printf
+```
+
+Using NPM:
+```Shell
+npm i styled-printf
+```
 
 ## How to use
 
