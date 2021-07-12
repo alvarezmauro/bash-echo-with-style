@@ -194,36 +194,115 @@ setBackgroundColorValue() {
   fi
 }
 
+testFormatting() {
+  printf "%s\n" "Test text formats:"
+  printf "\e[0m%s${RESET_STYLE}    \e[1m%s${RESET_STYLE}    \e[2m%s${RESET_STYLE}    \e[3m%s${RESET_STYLE}\n" "Normal" "Bold" "Dim" "Italics"
+  printf "\e[4m%s${RESET_STYLE}    \e[5m%s${RESET_STYLE}    \e[7m%s${RESET_STYLE}    \e[8m%s${RESET_STYLE}\n\n" "Underline" "Blink" "Reverse" "Password"
+
+
+  printf "%s\n" "Test colors:"
+
+  for fgbg in 38 48; do       # Foreground / Background
+    for color in {0..255}; do # Colors
+      # Display the color
+      printf "\e[${fgbg};5;%sm  %3s  \e[0m" $color $color
+      # Display 6 colors per lines
+      if [ $((($color + 1) % 6)) == 4 ]; then
+        printf "\n" "Test text formats:" # New line
+      fi
+    done
+    printf "\n" "Test text formats:" # New line
+  done
+
+  exit 0
+}
+
+printHelp() {
+  printf "%s\n\n" "The styled-printf command is like printf (in fact it's a function wrapping printf) that allows you
+to easily set the text styling, color and background color for the output"
+
+  printf "%s\n" "Flags:"
+  printf "%-30s %s\n" "  -h | --help" "Help documentation"
+  printf "%-30s %s\n\n" "  -t | --test" "Test all the different styles in your bash terminal"
+
+  printf "%s\n" "Usage:"
+  printf "%s\n\n" "styled-printf [-s <text format>] [--s <text format>] [-c <color>] [--color <color>]
+[-b <color>] [-background-color <color>] format [argument]"
+
+  printf "%s\n" "Options:"
+  printf "%-30s %s\n" "  -s | --style" "normal | bold | dim | italics | underline | blink"
+  printf "%-30s %s\n\n" "" "reverse | hidden | password"
+
+  printf "%-30s %s\n" "  -c | --color" "default | white | black | red | green | yellow | blue"
+  printf "%-30s %s\n" "" "magenta | cyan | gray | light-red | light-green | light-yellow"
+  printf "%-30s %s\n" "" "light-blue | light-magenta | light-cyan | light-gray"
+  printf "%-30s %s\n\n" "" "or a number between 0 and 256"
+
+  printf "%-30s %s\n" "  -bg | --background-color" "default | white | black | red | green | yellow | blue"
+  printf "%-30s %s\n" "" "magenta | cyan | gray | light-red | light-green | light-yellow"
+  printf "%-30s %s\n" "" "light-blue | light-magenta | light-cyan | light-gray"
+  printf "%-30s %s\n\n" "" "or a number between 0 and 256"
+
+  printf "%s\n" "Example:"
+  printf "%s\n" 'styled-printf -s bold -c red -b blue "%s\n" "This text is bold, red and has a blue background"'
+
+  exit 0
+}
+
+printWrongArgument() {
+  printf "%s\n" "unknown option: ${1}"
+  printf "%s\n\n" "usage: styled-printf [-s <text format>] [--s <text format>]
+           [-c <color>] [--color <color>] [-b <color>] [-background-color <color>]
+           format [argument]"
+  printf "%s\n" "For help: styled-printf [--h] [--help]"
+  exit 0
+}
+
 styleText() {
   local args=("$@")
   local printfValue=()
   i=0
+
+  if [[ "${#args[@]}" == 1 ]]; then
+    if [[ "${args[0]}" == "-h" || "${args[0]}" == "--help" ]]; then
+      printHelp
+    fi
+
+    if [[ "${args[0]}" == "-t" || "${args[0]}" == "--test" ]]; then
+      testFormatting
+    fi
+
+  fi
+
   while [ $i -lt "${#}" ]; do
     case ${args[i]} in
     -s | --style)
       setStyleValue ${args[i + 1]}
       unset args[i]
       unset args[i+1]
-      i=$((i+2))
+      i=$((i + 2))
       ;;
     -c | --color)
       setTextColorValue ${args[i + 1]}
       unset args[i]
       unset args[i+1]
-      i=$((i+2))
+      i=$((i + 2))
       ;;
     -b | --background-color)
       setBackgroundColorValue ${args[i + 1]}
       unset args[i]
       unset args[i+1]
-      i=$((i+2))
+      i=$((i + 2))
       ;;
     *)
+      if [[ "${args[i]:0:1}" == "-" ]]; then
+        printWrongArgument "${args[i]}"
+      fi
       printfValue+=("${args[i]}")
       i=$(($i + 1))
       ;;
     esac
-    
+
   done
 
   format="$(sed "s/\\\n/\\${RESET_STYLE}\\\n/g" <<<"${printfValue[0]}")"
